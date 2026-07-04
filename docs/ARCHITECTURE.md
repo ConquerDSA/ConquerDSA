@@ -13,7 +13,7 @@ The project is built around a single philosophy:
 > Collect data once.
 > Use it everywhere.
 
-The synchronization layer fetches coding activity from supported platforms only once. Every other module (Dashboard, AI Coach, README Generator, GitHub Automation) consumes the same analytics.
+The synchronization layer fetches coding activity from supported platforms only once. Every other module (Dashboard, AI Assistant, README Generator, GitHub Automation) consumes the same analytics.
 
 This avoids duplicated computation and keeps every component consistent.
 
@@ -40,7 +40,7 @@ ConquerDSA consists of four major systems.
                              │
               ┌──────────────┴──────────────┐
               ▼                             ▼
-      Analytics Dashboard           AI Coach
+      Analytics Dashboard           AI Assistant
 
 ```
 
@@ -84,7 +84,7 @@ No component communicates directly with coding platforms except the Synchronizat
                                               │
                      ┌────────────────────────┴──────────────────────┐
                      ▼                                               ▼
-             Analytics Dashboard                             AI Coach
+             Analytics Dashboard                             AI Assistant
                                                              │
                                 ┌────────────────────────────┼──────────────────────────┐
                                 ▼                            ▼                          ▼
@@ -218,9 +218,9 @@ Provides
 
 ---
 
-## AI Coach
+## AI Assistant
 
-The AI Coach consumes analytics and transforms them into actionable guidance.
+The AI Assistant consumes analytics and transforms them into actionable guidance.
 
 Capabilities
 
@@ -232,7 +232,7 @@ Capabilities
 - Topic Recommendations
 - AI Chat Assistant
 
-The AI Coach never fetches coding platform data directly.
+The AI Assistant never fetches coding platform data directly.
 
 It only consumes analytics.
 
@@ -346,7 +346,7 @@ Review
 - Dynamic README
 - Portal
 - Analytics Dashboard
-- AI Coach
+- AI Assistant
 
 ---
 
@@ -380,6 +380,6 @@ Analytics is the intelligence layer.
 
 The Portal is the visualization layer.
 
-The AI Coach is the decision layer.
+The AI Assistant is the decision layer.
 
 Together they form an intelligent developer companion.
