@@ -1,96 +1,96 @@
 # 🏗️ ConquerDSA Architecture
 
-> This document explains the technical architecture, design decisions, and engineering principles behind ConquerDSA.
+> This document describes the technical architecture, design principles, and system flow of ConquerDSA.
 
 ---
 
 # Vision
 
-ConquerDSA is more than a LeetCode synchronization tool.
+ConquerDSA is an intelligent developer companion that automates coding portfolio management while providing deep analytics, personalized AI guidance, and interview preparation.
 
-It is an intelligent DSA companion that automatically builds a coding portfolio while providing deep analytics, GitHub automation, and AI-powered guidance.
+The project is built around a single philosophy:
 
-The project follows a modular architecture where every component has a single responsibility.
+> Collect data once.
+> Use it everywhere.
 
----
+The synchronization layer fetches coding activity from supported platforms only once. Every other module (Dashboard, AI Coach, README Generator, GitHub Automation) consumes the same analytics.
 
-# High-Level Architecture
-
-                    LeetCode
-                        │
-                        ▼
-               Sync Engine (CLI)
-                        │
-                        ▼
-              Local Analytics Engine
-                        │
-          ┌─────────────┴─────────────┐
-          ▼                           ▼
-     README Generator          Dashboard API
-          │                           │
-          ▼                           ▼
-     GitHub Repository          Web Dashboard
+This avoids duplicated computation and keeps every component consistent.
 
 ---
 
-# Why Python?
+# Product Overview
 
-Python offers:
+ConquerDSA consists of four major systems.
 
-- Excellent ecosystem
-- Cross-platform compatibility
-- Rich GitHub tooling
-- AI integration
-- Fast development speed
-
----
-
-# Why uv?
-
-We use **uv** because it provides:
-
-- Extremely fast dependency resolution
-- Modern Python packaging
-- Reproducible environments
-- Lock file support
-- Excellent developer experience
-
----
-
-# Why Typer?
-
-ConquerDSA is primarily a CLI application.
-
-Typer provides:
-
-- Type-safe commands
-- Automatic help generation
-- Clean command organization
-- Excellent user experience
-
-Example:
-
-```bash
-conquerdsa init
-conquerdsa sync
-conquerdsa doctor
-conquerdsa dashboard
 ```
 
+                 ┌──────────────────────┐
+                 │      CLI Tool        │
+                 └──────────┬───────────┘
+                            │
+                            ▼
+                 ┌──────────────────────┐
+                 │   Analytics Engine   │
+                 └──────────┬───────────┘
+                            │
+          ┌─────────────────┼──────────────────┐
+          ▼                 ▼                  ▼
+  README Generator    Web Portal         GitHub Automation
+                             │
+              ┌──────────────┴──────────────┐
+              ▼                             ▼
+      Analytics Dashboard           AI Coach
+
+```
+
+Every component depends on the Analytics Engine.
+
+No component communicates directly with coding platforms except the Synchronization Engine.
+
 ---
 
-# Repository Structure
+# High-Level System Architecture
 
-src/
-└── conquerdsa/
-    ├── cli/
-    ├── analytics/
-    ├── github/
-    ├── readme/
-    ├── ai/
-    ├── models/
-    ├── utils/
-    └── main.py
+```
+
+                    Coding Platforms
+
+        LeetCode • Codeforces • CodeChef • AtCoder
+                           │
+                           ▼
+                 ┌─────────────────────┐
+                 │ Synchronization      │
+                 │ Engine              │
+                 └─────────┬───────────┘
+                           │
+                           ▼
+                 ┌─────────────────────┐
+                 │ Local Data Store    │
+                 └─────────┬───────────┘
+                           │
+                           ▼
+                 ┌─────────────────────┐
+                 │ Analytics Engine    │
+                 └───────┬───────┬─────┘
+                         │       │
+                         │       │
+             ┌───────────┘       └────────────┐
+             ▼                                ▼
+      README Generator                  Web Portal
+             │                                │
+             ▼                                │
+     GitHub Repository                        │
+                                              │
+                     ┌────────────────────────┴──────────────────────┐
+                     ▼                                               ▼
+             Analytics Dashboard                             AI Coach
+                                                             │
+                                ┌────────────────────────────┼──────────────────────────┐
+                                ▼                            ▼                          ▼
+                      Weakness Analyzer             Personalized Roadmap        Interview Assistant
+
+```
 
 ---
 
@@ -98,130 +98,219 @@ src/
 
 ## CLI
 
-Responsible only for user interaction.
+Responsible for user interaction.
 
-Never performs business logic.
+Example commands
+
+```
+
+conquerdsa init
+conquerdsa sync
+conquerdsa doctor
+conquerdsa status
+conquerdsa dashboard
+
+```
+
+The CLI never computes analytics.
+
+It only orchestrates workflows.
 
 ---
 
-## Sync Engine
+## Synchronization Engine
 
 Responsibilities
 
-- Connect to coding platforms
+- Authenticate users
+- Fetch coding activity
 - Detect solved problems
-- Download metadata
 - Store local cache
+- Keep repositories synchronized
+
+Supported Platforms
+
+- LeetCode (V1)
+- Codeforces (V2)
+- CodeChef (V2)
+- AtCoder (V2)
+
+---
+
+## Local Data Store
+
+Stores normalized coding data.
+
+Purpose
+
+- Avoid repeated API calls
+- Improve performance
+- Enable offline analytics
+- Provide one source of truth
 
 ---
 
 ## Analytics Engine
 
-Responsible for computing:
+The heart of ConquerDSA.
 
-- Streaks
+Responsible for computing
+
 - Difficulty distribution
 - Topic mastery
+- Streaks
+- Acceptance rate
+- Daily activity
 - Contest statistics
-- Activity heatmaps
+- Heatmaps
 - Progress trends
+- Company readiness
+- Weak topic identification
 
-This module never interacts with GitHub.
+Every intelligent feature depends on this engine.
 
 ---
 
 ## README Generator
 
-Responsible for producing:
+Consumes analytics and produces
 
-- Repository statistics
+- Dynamic README
+- Statistics
 - Badges
 - Topic tables
-- Progress sections
+- Progress reports
 - Achievement cards
 
-It consumes analytics but never computes them.
+It never computes analytics.
 
 ---
 
-## Dashboard
+## GitHub Automation
 
-Displays analytics generated by the backend.
+Responsible for
 
-The dashboard never communicates directly with LeetCode.
-
-Instead:
-
-Dashboard
-      │
-      ▼
-GitHub Repository
-      │
-      ▼
-Generated Analytics
-
-This design keeps the dashboard deployment simple.
+- Repository creation
+- README updates
+- Folder synchronization
+- Commit automation
+- GitHub Pages deployment
 
 ---
 
-# AI Coach
+# ConquerDSA Portal
 
-Future versions include an AI learning assistant capable of:
+The Portal is the primary user interface.
 
-- Topic recommendations
-- Weakness detection
-- Interview preparation
-- Study plans
-- Resource recommendations
-- Question recommendations
+It consists of two major products.
 
-The AI never modifies user data.
+## Analytics Dashboard
+
+Provides
+
+- Heatmaps
+- Progress charts
+- Topic mastery
+- Difficulty breakdown
+- Streak visualization
+- Repository statistics
+- Coding trends
+
+---
+
+## AI Coach
+
+The AI Coach consumes analytics and transforms them into actionable guidance.
+
+Capabilities
+
+- Weakness Analyzer
+- Personalized Study Roadmap
+- Daily Recommendations
+- Company Preparation
+- Interview Readiness
+- Topic Recommendations
+- AI Chat Assistant
+
+The AI Coach never fetches coding platform data directly.
 
 It only consumes analytics.
 
 ---
 
+# Folder Structure
+
+```
+
+src/
+└── conquerdsa/
+├── cli/
+├── analytics/
+├── sync/
+├── github/
+├── readme/
+├── ai/
+├── dashboard/
+├── config/
+├── models/
+├── utils/
+└── main.py
+
+```
+
+---
+
 # Design Principles
 
-## Single Responsibility
+## Single Source of Truth
 
-Every module should solve one problem.
+Coding platforms are synchronized once.
+
+Every other module consumes analytics.
 
 ---
 
 ## Separation of Concerns
 
-Analytics should never write README files.
+Synchronization
 
-README generation should never fetch LeetCode data.
+↓
 
-CLI should never compute analytics.
+Analytics
+
+↓
+
+Consumers
+
+No module should perform another module's responsibility.
 
 ---
 
-## Explicit is Better than Implicit
+## Modular Architecture
 
-Configuration should always be visible.
-
-Hidden behaviour should be avoided.
+Every module should be replaceable without affecting the rest of the system.
 
 ---
 
 ## Developer Experience First
 
-Commands should be discoverable.
+Clear commands
 
-Error messages should explain solutions.
+Helpful error messages
 
-Configuration should be simple.
+Minimal configuration
+
+Excellent documentation
 
 ---
 
-# Engineering Workflow
+# Development Workflow
 
-Every feature follows:
+Every feature follows
 
-Plan
+```
+
+Design
 
 ↓
 
@@ -239,36 +328,58 @@ Commit
 
 Push
 
+↓
+
+Review
+
+```
+
 ---
 
-# Future Roadmap
+# Version Roadmap
 
-Version 1
+## Version 1
 
-- LeetCode sync
-- GitHub automation
-- README generation
-- Dashboard
+- LeetCode
+- GitHub Automation
+- Analytics Engine
+- Dynamic README
+- Portal
+- Analytics Dashboard
 - AI Coach
 
-Version 2
+---
+
+## Version 2
 
 - Codeforces
 - CodeChef
 - AtCoder
-- GeeksforGeeks
+- Multi-platform analytics
+- Team comparison
 
-Version 3
+---
 
-- Mobile companion
-- Team dashboards
-- Community leaderboards
-- Interview tracking
+## Version 3
+
+- Community Features
+- Mobile Companion
+- Browser Extension
+- Interview Tracking
+- Learning Communities
 
 ---
 
 # Philosophy
 
-ConquerDSA is built with one objective:
+ConquerDSA is not a synchronization tool.
 
-Help students spend less time managing their coding journey and more time improving their problem-solving skills.
+Synchronization is only the data collection layer.
+
+Analytics is the intelligence layer.
+
+The Portal is the visualization layer.
+
+The AI Coach is the decision layer.
+
+Together they form an intelligent developer companion.
