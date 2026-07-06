@@ -14,3 +14,6 @@ app.command()(init)
 def version() -> None:
     """Display the current ConquerDSA version."""
     typer.echo("ConquerDSA v0.1.0")
+
+from conquerdsa.cli.doctor import doctor
+app.command()(doctor)

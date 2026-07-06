@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import tomllib
 import tomli_w
 from platformdirs import user_config_dir
 from rich.console import Console
@@ -53,3 +53,22 @@ class ConfigManager:
 
      with config_file.open("wb") as f:
         tomli_w.dump(config, f)
+    
+    @staticmethod
+    def exists() -> bool:
+     """Check whether the configuration file exists."""
+
+     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
+     config_file = config_dir / "config.toml"
+
+     return config_file.exists()
+    
+    @staticmethod
+    def load() -> dict:
+     """Load configuration from config.toml."""
+
+     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
+     config_file = config_dir / "config.toml"
+
+     with config_file.open("rb") as f:
+        return tomllib.load(f)
