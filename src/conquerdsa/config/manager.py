@@ -43,3 +43,13 @@ class ConfigManager:
             console.print("[yellow]✓ config.toml already exists[/yellow]")
 
         console.print(f"[cyan]{config_file}[/cyan]")
+    
+    @staticmethod
+    def save(config: dict) -> None:
+     """Save configuration to config.toml."""
+
+     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
+     config_file = config_dir / "config.toml"
+
+     with config_file.open("wb") as f:
+        tomli_w.dump(config, f)
