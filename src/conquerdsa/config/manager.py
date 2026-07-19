@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import tomllib
 import tomli_w
 from platformdirs import user_config_dir
@@ -12,14 +13,23 @@ class ConfigManager:
 
     APP_NAME = "ConquerDSA"
 
+    @classmethod
+    def config_dir(cls) -> Path:
+        """Return the ConquerDSA configuration directory."""
+        config_dir = Path(user_config_dir(cls.APP_NAME))
+        config_dir.mkdir(parents=True, exist_ok=True)
+        return config_dir
+
+    @classmethod
+    def config_file(cls) -> Path:
+        """Return the path to config.toml."""
+        return cls.config_dir() / "config.toml"
+
     @staticmethod
     def initialize() -> None:
         """Initialize ConquerDSA configuration."""
 
-        config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
-        config_dir.mkdir(parents=True, exist_ok=True)
-
-        config_file = config_dir / "config.toml"
+        config_file = ConfigManager.config_file()
 
         if not config_file.exists():
             default_config = {
@@ -43,32 +53,25 @@ class ConfigManager:
             console.print("[yellow]✓ config.toml already exists[/yellow]")
 
         console.print(f"[cyan]{config_file}[/cyan]")
-    
+
     @staticmethod
     def save(config: dict) -> None:
-     """Save configuration to config.toml."""
+        """Save configuration to config.toml."""
 
-     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
-     config_file = config_dir / "config.toml"
+        config_file = ConfigManager.config_file()
 
-     with config_file.open("wb") as f:
-        tomli_w.dump(config, f)
-    
+        with config_file.open("wb") as f:
+            tomli_w.dump(config, f)
+
     @staticmethod
     def exists() -> bool:
-     """Check whether the configuration file exists."""
+        """Check whether the configuration file exists."""
 
-     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
-     config_file = config_dir / "config.toml"
+        return ConfigManager.config_file().exists()
 
-     return config_file.exists()
-    
     @staticmethod
     def load() -> dict:
-     """Load configuration from config.toml."""
+        """Load configuration from config.toml."""
 
-     config_dir = Path(user_config_dir(ConfigManager.APP_NAME))
-     config_file = config_dir / "config.toml"
-
-     with config_file.open("rb") as f:
-        return tomllib.load(f)
+        with ConfigManager.config_file().open("rb") as f:
+            return tomllib.load(f)

@@ -56,6 +56,8 @@ def init() -> None:
     }
 
     ConfigManager.save(config)
+    from conquerdsa.database.schema import SchemaManager
+    SchemaManager.initialize()
 
     console.print("\n[bold green]✓ Configuration saved successfully![/bold green]")
     console.print("[cyan]Happy Coding 🚀[/cyan]")
