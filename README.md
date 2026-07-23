@@ -10,6 +10,7 @@
 <picture>
 <img srec = "assets/logo.png" alt = "logo" width = "100%">
 </picture>
+<br>
 <picture>
   <img src="assets/banner.png" alt="ConquerDSA Hero Banner" width="100%">
 </picture>
