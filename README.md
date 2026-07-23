@@ -7,14 +7,16 @@
 </div>
 
 <div align="center">
-
 <picture>
-  <img src="assets/banner-hero.png" alt="ConquerDSA Hero Banner" width="100%">
+<img srec = "assets/logo.png" alt = "logo" width = "100%">
+</picture>
+<picture>
+  <img src="assets/banner.png" alt="ConquerDSA Hero Banner" width="100%">
 </picture>
 
 <br>
 
-# 🚀 ConquerDSA
+# ConquerDSA
 
 ### **Build Once. Learn Forever.**
 
