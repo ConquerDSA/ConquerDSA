@@ -8,7 +8,7 @@
 
 <div align="center">
 <picture>
-<img srec = "assets/logo.png" alt = "logo" width = "100%">
+<img src = "assets/logo.png" alt = "logo" width = "180">
 </picture>
 <br>
 <picture>
